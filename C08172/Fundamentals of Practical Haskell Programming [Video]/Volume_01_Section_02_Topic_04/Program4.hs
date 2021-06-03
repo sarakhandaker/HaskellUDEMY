@@ -31,3 +31,8 @@ main = do
     print total
     print mean
     print range
+
+-- :sprint doesnt force the value :force does while debugging
+-- :continue to move to next break point
+-- :list shows the point of code we are at
+-- :show breaks shows break points
