@@ -12,3 +12,4 @@ run ghc is an interpreter
 ghci
     binds "it" to the last evaluated result 
     :type or :info to get type and definition 
+    :{ and :} to make a multiline expression
