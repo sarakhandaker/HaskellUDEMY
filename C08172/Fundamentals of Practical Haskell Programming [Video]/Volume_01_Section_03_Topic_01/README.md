@@ -10,3 +10,7 @@ if you try to set an Int to a larger than 64 bit it will be 0
 
 intercalate adds strings together with a separator
 
+can use $ to reduce brackets for passing arguments in functions
+
+function composition, can use dot notation 
+eg show . addTen . doubleIt 5
