@@ -26,3 +26,6 @@ main = do
     print $ myMap show [10, 20, 30]
     print $ myFilter (< 25) [10, 20, 30]
     print $ myFold (+) 100 [10, 20, 30]
+
+-- using parametric polymorphism (like templates) haskell is statically and strongly typed
+-- cannot apply unconstrainted arbitratry functions to values whose types are given by the type variables
