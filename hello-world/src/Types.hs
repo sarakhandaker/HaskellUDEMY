@@ -1,5 +1,6 @@
 import Data.Complex
 import Data.Ratio
+import Data.List
 
 type Port = Int
 type HostInfo = (String, Int)
@@ -42,7 +43,6 @@ s0 = "abc"
 s1 :: String
 s1 = "\0088\x0058\o0130"
 
-
 --LIST TYPES
 l0 :: [Int]
 l0 = [1, 2, 3, 4, 5]
@@ -78,6 +78,24 @@ t1 = ("sometext", 8, 3.141)
 t2 :: ([Int], [String], (Float, Char))
 t2 = ([1, 2, 3, 4], ["aaa", "bbb"], (1.0, 'o'))
 
+--LIST TYPE Signatures
+f0 :: String -> Int
+f0 = length
+
+f1 :: String -> (String, Int)
+f1 x = (x, length x)
+
+f2 :: [String] -> [(String, Int)]
+f2 = map f1
+
+-- multiple arrows (arguments)
+formatList :: String -> String -> String -> [String] -> String
+formatList start end separator xs = start ++ (intercalate separator (map show xs)) ++ end
+
 main :: IO ()
 main = do
     print n0
+    print $ f0 "hello"
+    print $ f1 "hello"
+    print $ f2 ["hello", "goodbye"]
+    putStrLn $ formatList "<list>" "</list>" "|" ["first", "second", "third", "fourth"]
