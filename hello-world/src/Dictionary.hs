@@ -6,6 +6,11 @@ data Expresson = Number Int
                 | Subtract Expresson Expresson
     deriving (Eq, Show, Ord)
 
+calculate :: Expresson -> Int
+calculate (Number x )= x
+calculate (Add x y)= (calculate x) + (calculate y) 
+calculate (Subtract x y)= (calculate x) - (calculate y )
+
 main = print $ lookup "one" dict
     where dict = [("one", 1), ("two", 2), ("three", 3)]
 
