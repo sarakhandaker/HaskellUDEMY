@@ -1,13 +1,15 @@
 module Lib
-    ( someFunc, 
-    someString
+    ( formatGrid
+    , outputGrid
+    , languages
+    , grid
     ) where
 
-someFunc :: IO ()
-someFunc = putStrLn someString
+outputGrid :: [String] -> IO ()
+outputGrid grid = putStrLn $ formatGrid grid
 
-someString :: String
-someString = "someString"
+formatGrid :: [String] -> String
+formatGrid = unlines
 
 grid = [ "__C________R___"
        , "__SI________U__"
@@ -23,14 +25,14 @@ grid = [ "__C________R___"
        , "________CN_____"
        ]
 
-       languages = [ "BASIC"
-                    , "COBOL"
-                    , "CSHARP"
-                    , "HASKELL"
-                    , "LISP"
-                    , "PERL"
-                    , "PHP"
-                    , "PYTHON"
-                    , "RUBY"
-                    , "SCHEME"
-                   ]
+languages = [ "BASIC"
+            , "COBOL"
+            , "CSHARP"
+            , "HASKELL"
+            , "LISP"
+            , "PERL"
+            , "PHP"
+            , "PYTHON"
+            , "RUBY"
+            , "SCHEME"
+            ]
