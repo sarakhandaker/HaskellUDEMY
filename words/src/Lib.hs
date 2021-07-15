@@ -4,7 +4,8 @@ module Lib
     , skew
     , findWord
     , findWords
-    , findWordInLine
+    , findWordInCellInfix
+    , findWordInCellPrefix
     , gridWithCoords
     , zipOverGrid
     , cell2char
@@ -13,7 +14,7 @@ module Lib
     ) where
 
 import Data.List (isInfixOf, transpose)
-import Data.Maybe (catMaybes)
+import Data.Maybe (catMaybes, listToMaybe)
 
 type Grid a = [[a]]
 data Cell = Cell (Integer, Integer) Char | Indent deriving (Eq, Ord, Show)
@@ -65,15 +66,29 @@ skew (l:ls) = l : skew (map indent ls)
     where indent line = Indent : line
 
 findWord :: Grid Cell -> String -> Maybe [Cell]
-findWord grid word = undefined
-    -- let lines = getLines grid
-    --     found = or $ map (findWordInLine word) lines
-    -- in if found then Just word else Nothing
+findWord grid word =
+  let lines = getLines grid
+      foundWords = map (findWordInCellInfix word) lines
+  in listToMaybe (catMaybes foundWords)
 
 findWords :: Grid Cell -> [String] -> [[Cell]]
 findWords grid words = 
     let foundWords = map (findWord grid) words
     in catMaybes foundWords
 
-findWordInLine :: String -> [Cell] -> Maybe [Cell]
-findWordInLine = undefined -- isInfixOf
+-- findWordInLine :: String -> [Cell] -> Maybe [Cell]
+-- findWordInLine = undefined -- isInfixOf
+
+findWordInCellInfix :: String -> [Cell] -> Maybe [Cell]
+findWordInCellInfix _ [] = Nothing
+findWordInCellInfix word line =
+  let foundWord = findWordInCellPrefix [] word line
+  in case foundWord of
+       Nothing -> findWordInCellInfix word (tail line)
+       Just _ -> foundWord
+
+findWordInCellPrefix :: [Cell] -> String -> [Cell] -> Maybe [Cell]
+findWordInCellPrefix acc (x:xs) (c:cs) | x == cell2char c
+                                  = findWordInCellPrefix (c : acc) xs cs
+findWordInCellPrefix acc []     _ = Just (reverse acc)
+findWordInCellPrefix _    _     _ = Nothing
