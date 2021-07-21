@@ -11,7 +11,11 @@ module Lib
     , cell2char
     , Game (Game, gameGrid, gameWords)
     , Cell (Cell, Indent)
+    , formatGame
     , makeGame
+    , totalWords
+    , score
+    , playWord
     , zipOverGridWith
     ) where
 
@@ -30,6 +34,48 @@ makeGame grid words =
   let grid'  = gridWithCoords grid
       words' = M.fromList $ map (\word -> (word, Nothing)) words
   in Game grid' words'
+
+totalWords :: Game -> Int
+totalWords game = length $ M.keys (gameWords game)
+
+score :: Game -> Int
+score game = length $ catMaybes $ M.elems (gameWords game)
+
+playWord :: Game -> String -> Game
+playWord game word | not (M.member word (gameWords game)) = game
+playWord game word =
+  let grid = gameGrid game
+      foundWord = findWord grid word
+      newGame = case foundWord of
+        Nothing -> game
+        Just cs ->
+          let words = gameWords game
+              words' = M.insert word foundWord words
+          in Game grid words'
+  in newGame
+
+playGame game = do
+  let grid = gameGrid game
+      words = gameWords game
+      s = score game
+      t = totalWords game
+  hSetBuffering stdout NoBuffering
+  putStrLn ((show s) ++ "/" ++ (show t))
+  if s < t then do
+    putStr (formatGrid grid)
+    putStr "Enter a word> "
+    word <- getLine
+    let newGame = playWord game word
+    playGame newGame
+  else
+    putStrLn "Congratulations!"
+
+formatGame :: Game -> String
+formatGame game = formatGrid grid 
+                ++ "\n\n"
+                ++ (show $ score game)
+                ++ "/"
+                ++ (show $ totalWords game)
 
 zipOverGrid :: Grid a -> Grid b -> Grid (a,b)
 zipOverGrid = zipWith zip
