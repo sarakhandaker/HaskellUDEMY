@@ -9,15 +9,27 @@ module Lib
     , gridWithCoords
     , zipOverGrid
     , cell2char
+    , Game (Game, gameGrid, gameWords)
     , Cell (Cell, Indent)
+    , makeGame
     , zipOverGridWith
     ) where
 
 import Data.List (isInfixOf, transpose)
 import Data.Maybe (catMaybes, listToMaybe)
+import qualified Data.Map as M
 
-type Grid a = [[a]]
+data Game = Game { gameGrid  :: Grid Cell
+                 , gameWords :: M.Map String (Maybe [Cell])
+                 } deriving (Show)
 data Cell = Cell (Integer, Integer) Char | Indent deriving (Eq, Ord, Show)
+type Grid a = [[a]]
+
+makeGame :: Grid Char -> [String] -> Game
+makeGame grid words =
+  let grid'  = gridWithCoords grid
+      words' = M.fromList $ map (\word -> (word, Nothing)) words
+  in Game grid' words'
 
 zipOverGrid :: Grid a -> Grid b -> Grid (a,b)
 zipOverGrid = zipWith zip
